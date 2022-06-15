@@ -56,6 +56,7 @@ And add a new cassandra connection:
 ```php
 'cassandra' => [
     'driver'          => 'cassandra',
+    'scheme'          => env('DB_SCHEME', 'tcp'),
     'host'            => env('DB_HOST', 'localhost'),
     'port'            => env('DB_PORT', 9042),
     'keyspace'        => env('DB_DATABASE'),
@@ -66,6 +67,13 @@ And add a new cassandra connection:
     'timeout'         => null,
     'connect_timeout' => 5.0,
     'request_timeout' => 12.0,
+    'ssl' => [
+        'verify_peer' => nv('DB_SSL_VERIFY_PEER', false),
+        'trusted_cert' => nv('DB_SSL_TRUSTED_CERT_FILE', null),
+        'client_cert' => nv('DB_SSL_CLIENT_CERT_FILE', null),
+        'private_cert' => nv('DB_SSL_PRIVATE_CERT_FILE', null),
+        'private_passphrase' => nv('DB_SSL_PRIVATE_PASSPHRASE', null),
+    ],
 ],
 ```
 

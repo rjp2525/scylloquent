@@ -54,6 +54,8 @@ class CassandraConnector extends Connector
         call_user_func_array([$this->builder, 'withContactPoints'], $this->getContactPoints($config));
 
         $this->builder->withPort($this->getPort($config));
+
+        $this->setSslOptions($config);
     }
 
     /**
@@ -88,6 +90,41 @@ class CassandraConnector extends Connector
     protected function getPort(array $config)
     {
         return !empty($config['port']) ? (int)$config['port'] : 9042;
+    }
+
+    /**
+     * Set SSL Options
+     *
+     * @param array $config
+     * @return void
+     */
+    protected function setSslOptions(array $config)
+    {
+        if ($config['scheme'] != 'tls'
+            || !isset($config['ssl'])
+        ) {
+            return;
+        }
+
+        $ssl = \Cassandra::ssl();
+
+        if ($config['ssl']['verify_peer'] == false) {
+            $ssl = $ssl->withVerifyFlags(\Cassandra::VERIFY_NONE);
+        }
+
+        if (!empty($config['ssl']['trusted_cert'])) {
+            $ssl = $ssl->withTrustedCerts($config['ssl']['trusted_cert']);
+        }
+
+        if (!empty($config['ssl']['client_cert'])) {
+            $ssl = $ssl->withClientCert($config['ssl']['client_cert']);
+        }
+
+        if (!empty($config['ssl']['private_cert'])) {
+            $ssl = $ssl->withPrivateKey($config['ssl']['private_cert']);
+        }
+
+        $this->builder->withSSL($ssl->build());
     }
 
     /**
