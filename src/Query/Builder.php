@@ -168,6 +168,27 @@ class Builder extends BaseBuilder
     }
 
     /**
+     * Currently we are doing cursor based pagination
+     * TODO
+     * 1. Implementing mechanism for jumping into a page
+     * 2. Taking columns in consideration
+     * 
+     * @param integer $perPage
+     * 
+     * @return Collection
+     */
+    public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+        $option = ['page_size' => $perPage];
+        
+        if (!empty($this->paginationStateToken)) {
+            $option['paging_state_token'] = $this->paginationStateToken;
+        }
+
+        return $this->runSelect($option);
+    }
+
+    /**
      * Run the query as a "select" statement against the connection.
      *
      * @param array $options
