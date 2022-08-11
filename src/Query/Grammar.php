@@ -31,6 +31,7 @@ class Grammar extends BaseGrammar
     {
         return (int) $ttl ? 'using ttl ' . (int) $ttl : '';
     }
+
     /**
      * Compile an insert statement into SQL.
      *
