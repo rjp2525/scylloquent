@@ -126,6 +126,6 @@ class Grammar extends BaseGrammar
             $queryWith .= $this->compileTtl($query, $options['ttl']);
         }
 
-        return "update {$table} set {$columns} {$where}";
+        return "update {$table} $queryWith set {$columns} {$where}";
     }
 }
