@@ -41,6 +41,13 @@ class Builder extends BaseBuilder
     protected $paginationStateToken = null;
 
     /**
+     * Use cassandra ttl
+     *
+     * @var null|int
+     */
+    protected $ttl = null;
+
+    /**
      * @inheritdoc
      */
     public function __construct(Connection $connection, Grammar $grammar = null, Processor $processor = null)
@@ -55,6 +62,20 @@ class Builder extends BaseBuilder
      */
     public function allowFiltering($bool = true) {
         $this->allowFiltering = (bool) $bool;
+
+        return $this;
+    }
+
+    /**
+     * Support cassandra ttl
+     *
+     * @param int $ttl
+     *
+     * @return self
+     */
+    public function ttl($ttl)
+    {
+        $this->ttl = (int) $ttl;
 
         return $this;
     }
@@ -77,8 +98,12 @@ class Builder extends BaseBuilder
         if (!is_array(reset($values))) {
             $values = [$values];
 
+            $query = empty($this->ttl)
+                ? $this->grammar->compileInsert($this, $values)
+                : $this->grammar->compileInsertWithOptions($this, $values, ['ttl' => $this->ttl]);
+
             return $this->connection->insert(
-                $this->grammar->compileInsert($this, $values),
+                $query,
                 $this->cleanBindings(Arr::flatten($values, 1))
             );
         }
@@ -92,12 +117,34 @@ class Builder extends BaseBuilder
             foreach ($values as $key => $value) {
                 ksort($value);
 
-                $queries[] = $this->grammar->compileInsert($this, $value);
+                $queries[] = empty($this->ttl)
+                    ? $this->grammar->compileInsert($this, $values)
+                    : $this->grammar->compileInsertWithOptions($this, $values, ['ttl' => $this->ttl]);
+
                 $bindings[] = $this->cleanBindings(Arr::flatten($value, 1));
             }
 
             return $this->connection->insertBulk($queries, $bindings);
         }
+    }
+
+    /**
+     * Update records in the database.
+     *
+     * @param  array  $values
+     * @return int
+     */
+    public function update(array $values)
+    {
+        $this->applyBeforeQueryCallbacks();
+
+        $sql = empty($this->ttl)
+            ? $this->grammar->compileUpdate($this, $values)
+            : $this->grammar->compileUpdateWithOptions($this, $values, ['ttl' => $this->ttl]);
+
+        return $this->connection->update($sql, $this->cleanBindings(
+            $this->grammar->prepareBindingsForUpdate($this->bindings, $values)
+        ));
     }
 
     /**
@@ -172,15 +219,15 @@ class Builder extends BaseBuilder
      * TODO
      * 1. Implementing mechanism for jumping into a page
      * 2. Taking columns in consideration
-     * 
+     *
      * @param integer $perPage
-     * 
+     *
      * @return Collection
      */
     public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null)
     {
         $option = ['page_size' => $perPage];
-        
+
         if (!empty($this->paginationStateToken)) {
             $option['paging_state_token'] = $this->paginationStateToken;
         }
