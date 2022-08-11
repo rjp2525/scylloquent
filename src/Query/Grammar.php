@@ -38,8 +38,7 @@ class Grammar extends BaseGrammar
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @param  array  $options
-     *
-     *  @return string
+     * @return string
      */
     public function compileInsertWithOptions(Builder $query, array $values, array $options = [])
     {
@@ -80,7 +79,6 @@ class Grammar extends BaseGrammar
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @param  array  $options
-     *
      * @return string
      */
     public function compileUpdateWithOptions(Builder $query, array $values, array $options = [])
