@@ -66,7 +66,7 @@ class Grammar extends BaseGrammar
 
         $queryWith = '';
 
-        if (!empty($optios['ttl'])) {
+        if (!empty($options['ttl'])) {
             $queryWith .= $this->compileTtl($query, $options['ttl']);
         }
 
@@ -121,7 +121,7 @@ class Grammar extends BaseGrammar
     {
         $queryWith = '';
 
-        if (!empty($optios['ttl'])) {
+        if (!empty($options['ttl'])) {
             $queryWith .= $this->compileTtl($query, $options['ttl']);
         }
 
