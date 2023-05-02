@@ -1,9 +1,9 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Eloquent;
+namespace DanielHe4rt\Scylloquent\Eloquent;
 
 use Cassandra\Rows;
-use AHAbid\EloquentCassandra\Collection;
+use DanielHe4rt\Scylloquent\Collection;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class Builder extends EloquentBuilder

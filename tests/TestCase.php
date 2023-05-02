@@ -1,8 +1,8 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Tests;
+namespace DanielHe4rt\Scylloquent\Tests;
 
-use AHAbid\EloquentCassandra\CassandraServiceProvider;
+use DanielHe4rt\Scylloquent\CassandraServiceProvider;
 
 class TestCase extends Orchestra\Testbench\TestCase
 {

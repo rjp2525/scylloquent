@@ -1,9 +1,9 @@
 <?php
 
-namespace AHAbid\EloquentCassandra;
+namespace DanielHe4rt\Scylloquent;
 
 use \Cassandra\Rows;
-use AHAbid\EloquentCassandra\Eloquent\Model;
+use DanielHe4rt\Scylloquent\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection as BaseCollection;
 
 class Collection extends BaseCollection

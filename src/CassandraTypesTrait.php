@@ -1,6 +1,6 @@
 <?php
 
-namespace AHAbid\EloquentCassandra;
+namespace DanielHe4rt\Scylloquent;
 
 use Cassandra\Value;
 

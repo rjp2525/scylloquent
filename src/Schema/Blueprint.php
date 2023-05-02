@@ -1,8 +1,8 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Schema;
+namespace DanielHe4rt\Scylloquent\Schema;
 
-use AHAbid\EloquentCassandra\Exceptions\CassandraNoPrimarySetException;
+use DanielHe4rt\Scylloquent\Exceptions\CassandraNoPrimarySetException;
 use Illuminate\Database\Schema\Blueprint as BaseBlueprint;
 
 class Blueprint extends BaseBlueprint

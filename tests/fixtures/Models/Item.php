@@ -1,8 +1,8 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Fixtures\Models;
+namespace DanielHe4rt\Scylloquent\Fixtures\Models;
 
-use AHAbid\EloquentCassandra\Eloquent\Model;
+use DanielHe4rt\Scylloquent\Eloquent\Model;
 
 class Item extends Model
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Schema;
+namespace DanielHe4rt\Scylloquent\Schema;
 
 use Closure;
 use Illuminate\Database\Schema\Builder as BaseBuilder;
 
 class Builder extends BaseBuilder
 {
-    /** @var \AHAbid\EloquentCassandra\Connection */
+    /** @var \DanielHe4rt\Scylloquent\Connection */
     protected $connection;
 
     /**

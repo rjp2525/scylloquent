@@ -1,10 +1,10 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Query;
+namespace DanielHe4rt\Scylloquent\Query;
 
-use AHAbid\EloquentCassandra\Collection;
-use AHAbid\EloquentCassandra\Connection;
-use AHAbid\EloquentCassandra\CassandraTypesTrait;
+use DanielHe4rt\Scylloquent\Collection;
+use DanielHe4rt\Scylloquent\Connection;
+use DanielHe4rt\Scylloquent\CassandraTypesTrait;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Arr;
 

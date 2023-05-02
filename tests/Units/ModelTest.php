@@ -1,12 +1,12 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Tests\Units;
+namespace DanielHe4rt\Scylloquent\Tests\Units;
 
-use AHAbid\EloquentCassandra\Tests\TestCase;
-use AHAbid\EloquentCassandra\Eloquent\Model;
-use AHAbid\EloquentCassandra\Fixtures\Models\Book;
-use AHAbid\EloquentCassandra\Fixtures\Models\Item;
-use AHAbid\EloquentCassandra\Fixtures\Models\User;
+use DanielHe4rt\Scylloquent\Tests\TestCase;
+use DanielHe4rt\Scylloquent\Eloquent\Model;
+use DanielHe4rt\Scylloquent\Fixtures\Models\Book;
+use DanielHe4rt\Scylloquent\Fixtures\Models\Item;
+use DanielHe4rt\Scylloquent\Fixtures\Models\User;
 use Carbon\Carbon;
 use Cassandra\Timestamp;
 use Illuminate\Database\Eloquent\Collection;

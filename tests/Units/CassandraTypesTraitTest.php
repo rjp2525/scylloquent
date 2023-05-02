@@ -1,9 +1,9 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Tests\Units;
+namespace DanielHe4rt\Scylloquent\Tests\Units;
 
-use AHAbid\EloquentCassandra\Tests\TestCase;
-use AHAbid\EloquentCassandra\Fixtures\Models\Item;
+use DanielHe4rt\Scylloquent\Tests\TestCase;
+use DanielHe4rt\Scylloquent\Fixtures\Models\Item;
 
 class CassandraTypesTraitTest extends TestCase
 {

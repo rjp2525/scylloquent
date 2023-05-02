@@ -1,10 +1,10 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Eloquent;
+namespace DanielHe4rt\Scylloquent\Eloquent;
 
-use AHAbid\EloquentCassandra\CassandraTypesTrait;
-use AHAbid\EloquentCassandra\Collection;
-use AHAbid\EloquentCassandra\Eloquent\Builder as EloquentCassandraEloquentBuilder;
+use DanielHe4rt\Scylloquent\CassandraTypesTrait;
+use DanielHe4rt\Scylloquent\Collection;
+use DanielHe4rt\Scylloquent\Eloquent\Builder as EloquentCassandraEloquentBuilder;
 use Carbon\Carbon;
 use Cassandra\Date;
 use Cassandra\Rows;

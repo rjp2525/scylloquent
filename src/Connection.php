@@ -1,10 +1,11 @@
 <?php
 
-namespace AHAbid\EloquentCassandra;
+namespace DanielHe4rt\Scylloquent;
 
 use Cassandra;
 use Cassandra\BatchStatement;
-use AHAbid\EloquentCassandra\Exceptions\CassandraNotSupportedException;
+use Cassandra\Cluster;
+use DanielHe4rt\Scylloquent\Exceptions\CassandraNotSupportedException;
 use Illuminate\Database\Connection as BaseConnection;
 
 class Connection extends BaseConnection
@@ -33,16 +34,16 @@ class Connection extends BaseConnection
     /**
      * The Cassandra cluster
      *
-     * @var \Cassandra\Cluster
+     * @var Cluster
      */
     protected $cluster;
 
     /**
      * Connection constructor.
-     * @param Cassandra\Cluster $cluster
+     * @param Cluster $cluster
      * @param array $config
      */
-    public function __construct(\Cassandra\Cluster $cluster, array $config)
+    public function __construct(Cluster $cluster, array $config)
     {
         $this->config = $config;
 
@@ -95,7 +96,7 @@ class Connection extends BaseConnection
     /**
      * Get a new query builder instance.
      *
-     * @return \AHAbid\EloquentCassandra\Query\Builder
+     * @return \DanielHe4rt\Scylloquent\Query\Builder
      */
     public function query()
     {
@@ -107,7 +108,7 @@ class Connection extends BaseConnection
     /**
      * return Cassandra cluster.
      *
-     * @return \Cassandra\Cluster
+     * @return Cluster
      */
     public function getCassandraCluster()
     {
@@ -156,10 +157,10 @@ class Connection extends BaseConnection
     /**
      * Run a select statement against the database.
      *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  bool  $useReadPdo
-     * @param  array  $customOptions
+     * @param string $query
+     * @param array $bindings
+     * @param bool $useReadPdo
+     * @param array $customOptions
      *
      * @return mixed
      */
@@ -171,10 +172,10 @@ class Connection extends BaseConnection
     /**
      * Run an bulk insert statement against the database.
      *
-     * @param  array  $queries
-     * @param  array  $bindings
-     * @param  int  $type
-     * @param  array  $customOptions
+     * @param array $queries
+     * @param array $bindings
+     * @param int $type
+     * @param array $customOptions
      *
      * @return bool
      */
@@ -186,10 +187,10 @@ class Connection extends BaseConnection
     /**
      * Execute a group of queries inside a batch statement against the database.
      *
-     * @param  array  $queries
-     * @param  array  $bindings
-     * @param  int  $type
-     * @param  array  $customOptions
+     * @param array $queries
+     * @param array $bindings
+     * @param int $type
+     * @param array $customOptions
      *
      * @return bool
      */
@@ -214,9 +215,9 @@ class Connection extends BaseConnection
     /**
      * Execute an CQL statement and return the boolean result.
      *
-     * @param  string  $query
-     * @param  array   $bindings
-     * @param  array  $customOptions
+     * @param string $query
+     * @param array $bindings
+     * @param array $customOptions
      *
      * @return mixed
      */
@@ -230,9 +231,9 @@ class Connection extends BaseConnection
      * the affected count for statements so we're just going to return 0, based on the idea
      * that if the query fails somehow, an exception will be thrown
      *
-     * @param  string  $query
-     * @param  array   $bindings
-     * @param  array  $customOptions
+     * @param string $query
+     * @param array $bindings
+     * @param array $customOptions
      *
      * @return int
      */
@@ -294,8 +295,8 @@ class Connection extends BaseConnection
     /**
      * Dynamically pass methods to the connection.
      *
-     * @param  string  $method
-     * @param  array   $parameters
+     * @param string $method
+     * @param array $parameters
      * @return mixed
      */
     public function __call($method, $parameters)

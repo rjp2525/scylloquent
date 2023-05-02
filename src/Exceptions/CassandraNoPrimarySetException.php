@@ -1,5 +1,5 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Exceptions;
+namespace DanielHe4rt\Scylloquent\Exceptions;
 
 class CassandraNoPrimarySetException extends \RuntimeException {}

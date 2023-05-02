@@ -1,10 +1,10 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Tests\Units;
+namespace DanielHe4rt\Scylloquent\Tests\Units;
 
-use AHAbid\EloquentCassandra\Tests\TestCase;
-use AHAbid\EloquentCassandra\Connection;
-use AHAbid\EloquentCassandra\Exceptions\CassandraNotSupportedException;
+use DanielHe4rt\Scylloquent\Tests\TestCase;
+use DanielHe4rt\Scylloquent\Connection;
+use DanielHe4rt\Scylloquent\Exceptions\CassandraNotSupportedException;
 use Illuminate\Support\Facades\DB;
 
 class ConnectionTest extends TestCase
@@ -137,7 +137,7 @@ class ConnectionTest extends TestCase
         $table = 'testtable';
 
         $builder = DB::connection('cassandra')->table($table);
-        $this->assertInstanceOf(\AHAbid\EloquentCassandra\Query\Builder::class, $builder);
+        $this->assertInstanceOf(\DanielHe4rt\Scylloquent\Query\Builder::class, $builder);
         $this->assertEquals($builder->from, $table);
     }
 

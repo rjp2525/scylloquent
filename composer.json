@@ -42,7 +42,7 @@
   },
   "autoload": {
     "psr-4": {
-      "AHAbid\\EloquentCassandra\\": "src/"
+      "DanielHe4rt\\Scylloquent\\": "src/"
     }
   },
   "autoload-dev": {

@@ -1,6 +1,6 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Repository;
+namespace DanielHe4rt\Scylloquent\Repository;
 
 use Illuminate\Database\Migrations\DatabaseMigrationRepository as BaseDatabaseMigrationRepository;
 

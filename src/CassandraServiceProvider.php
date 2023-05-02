@@ -1,8 +1,8 @@
 <?php
 
-namespace AHAbid\EloquentCassandra;
+namespace DanielHe4rt\Scylloquent;
 
-use AHAbid\EloquentCassandra\Repository\DatabaseMigrationRepository;
+use DanielHe4rt\Scylloquent\Repository\DatabaseMigrationRepository;
 use Illuminate\Support\ServiceProvider;
 
 class CassandraServiceProvider extends ServiceProvider

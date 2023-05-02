@@ -17,7 +17,7 @@ composer require a-h-abid/eloquent-cassandra
 And add the service provider in `config/app.php`:
 
 ```php
-AHAbid\EloquentCassandra\CassandraServiceProvider::class,
+DanielHe4rt\Scylloquent\CassandraServiceProvider::class,
 ```
 
 The service provider will register a cassandra database extension with the original database manager. There is no need to register additional facades or objects. When using cassandra connections, Laravel will automatically provide you with the corresponding cassandra objects.
@@ -27,7 +27,7 @@ For usage outside Laravel, check out the [Capsule manager](https://github.com/il
 ```php
 $capsule->getDatabaseManager()->extend('cassandra', function($config)
 {
-    return new AHAbid\EloquentCassandra\Connection($config);
+    return new DanielHe4rt\Scylloquent\Connection($config);
 });
 ```
 #### Lumen
@@ -39,7 +39,7 @@ Add next lines to your `bootstrap.php`
 ```
 
 ```php
-    $app->register(AHAbid\EloquentCassandra\CassandraServiceProvider::class);
+    $app->register(DanielHe4rt\Scylloquent\CassandraServiceProvider::class);
 ```
 
 Configuration

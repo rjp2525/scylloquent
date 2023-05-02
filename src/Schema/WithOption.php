@@ -1,6 +1,6 @@
 <?php
 
-namespace AHAbid\EloquentCassandra\Schema;
+namespace DanielHe4rt\Scylloquent\Schema;
 
 class WithOption
 {
