@@ -284,7 +284,7 @@ class Connection extends BaseConnection
      *
      * @return void
      */
-    protected function reconnectIfMissingConnection()
+    public function reconnectIfMissingConnection()
     {
         if (is_null($this->session)) {
             $this->session = $this->cluster->connect($this->keyspace);
