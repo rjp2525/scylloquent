@@ -1,41 +1,56 @@
 {
-    "name": "a-h-abid/eloquent-cassandra",
-    "description": "Cassandra driver for Eloquent ORM",
-    "keywords": ["laravel","lumen","eloquent","cassandra","csql","database","model"],
-    "homepage": "https://github.com/a-h-abid/eloquent-cassandra",
-    "authors": [
-        {
-            "name": "Ahmedul Haque Abid",
-            "role": "Developer",
-            "homepage": "https://github.com/a-h-abid",
-            "email": "a_h_abid@hotmail.com"
-        }
-    ],
-    "license" : "MIT",
-    "require": {
-        "php": ">=7.2.0",
-        "ext-cassandra": "^1.3",
-        "illuminate/support": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-        "illuminate/container": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-        "illuminate/database": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0",
-        "illuminate/events": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0"
+  "name": "danielhe4rt/eloquent-scylladb",
+  "description": "Cassandra/ScyllaDB driver for Eloquent ORM",
+  "keywords": [
+    "laravel",
+    "lumen",
+    "eloquent",
+    "cassandra",
+    "csql",
+    "database",
+    "model",
+    "scylladb"
+  ],
+  "homepage": "https://github.com/danielhe4rt/eloquent-scylladb",
+  "authors": [
+    {
+      "name": "Ahmedul Haque Abid",
+      "role": "Developer",
+      "homepage": "https://github.com/a-h-abid",
+      "email": "a_h_abid@hotmail.com"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^8.0 | ^9.0",
-        "orchestra/testbench": "^3.1",
-        "mockery/mockery": "^1.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "AHAbid\\EloquentCassandra\\" : "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "AHAbid\\EloquentCassandra\\Tests\\" : "tests/",
-            "AHAbid\\EloquentCassandra\\Fixtures\\" : "tests/fixtures/"
-        }
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    {
+      "name": "Daniel Reis",
+      "role": "Developer",
+      "homepage": "https://github.com/danielhe4rt",
+      "email": "danielhe4rt@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.4.0",
+    "ext-cassandra": "^1.3",
+    "illuminate/support": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^10.0",
+    "illuminate/container": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^10.0",
+    "illuminate/database": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^10.0",
+    "illuminate/events": "^5.8 | ^6.0 | ^7.0 | ^8.0 | ^9.0 | ^10.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0 | ^9.0",
+    "orchestra/testbench": "^3.1",
+    "mockery/mockery": "^1.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "AHAbid\\EloquentCassandra\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AHAbid\\EloquentCassandra\\Tests\\": "tests/",
+      "AHAbid\\EloquentCassandra\\Fixtures\\": "tests/fixtures/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
