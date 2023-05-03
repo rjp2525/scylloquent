@@ -10,8 +10,16 @@ use Cassandra\Date;
 use Cassandra\Rows;
 use Cassandra\Time;
 use Cassandra\Timestamp;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Casts\AsEncryptedArrayObject;
+use Illuminate\Database\Eloquent\Casts\AsEncryptedCollection;
+use Illuminate\Database\Eloquent\Casts\AsEnumArrayObject;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class Model extends BaseModel
 {
@@ -46,6 +54,8 @@ abstract class Model extends BaseModel
      */
     protected $primaryColumns = [];
 
+
+    public $timestamps = false;
     /**
      * @inheritdoc
      */
@@ -190,31 +200,47 @@ abstract class Model extends BaseModel
      *
      * @throws \Exception
      */
-    public function originalIsEquivalent($key, $current)
+    public function originalIsEquivalent($key)
     {
-        if (!array_key_exists($key, $this->original)) {
+        if (! array_key_exists($key, $this->original)) {
             return false;
         }
 
-        $original = $this->getOriginal($key);
+        $attribute = Arr::get($this->attributes, $key);
+        $original = Arr::get($this->original, $key);
 
-        if ($current === $original) {
+        if ($attribute === $original) {
             return true;
-        } elseif (is_null($current)) {
+        } elseif (is_null($attribute)) {
             return false;
-        } elseif ($this->isDateAttribute($key)) {
-            return $this->fromDateTime($current) ===
+        } elseif ($this->isDateAttribute($key) || $this->isDateCastableWithCustomFormat($key)) {
+            return $this->fromDateTime($attribute) ===
                 $this->fromDateTime($original);
-        } elseif ($this->hasCast($key)) {
-            return $this->castAttribute($key, $current) ===
+        } elseif ($this->hasCast($key, ['object', 'collection'])) {
+            return $this->fromJson($attribute) ===
+                $this->fromJson($original);
+        } elseif ($this->hasCast($key, ['real', 'float', 'double'])) {
+            if ($original === null) {
+                return false;
+            }
+
+            return abs($this->castAttribute($key, $attribute) - $this->castAttribute($key, $original)) < PHP_FLOAT_EPSILON * 4;
+        } elseif ($this->hasCast($key, static::$primitiveCastTypes)) {
+            return $this->castAttribute($key, $attribute) ===
                 $this->castAttribute($key, $original);
-        } elseif ($this->isCassandraValueObject($current)) {
-            return $this->valueFromCassandraObject($current) ===
-                $this->valueFromCassandraObject($original);
+        } elseif ($this->isClassCastable($key) && in_array($this->getCasts()[$key], [AsArrayObject::class, AsCollection::class])) {
+            return $this->fromJson($attribute) === $this->fromJson($original);
+        } elseif ($this->isClassCastable($key) && Str::startsWith($this->getCasts()[$key], [AsEnumArrayObject::class, AsEnumCollection::class])) {
+            return $this->fromJson($attribute) === $this->fromJson($original);
+        } elseif ($this->isClassCastable($key) && $original !== null && in_array($this->getCasts()[$key], [AsEncryptedArrayObject::class, AsEncryptedCollection::class])) {
+            return $this->fromEncryptedString($attribute) === $this->fromEncryptedString($original);
+        } elseif ($this->isCassandraValueObject($attribute)) {
+            return $this->valueFromCassandraObject($attribute) ===
+            $this->valueFromCassandraObject($original);
         }
 
-        return is_numeric($current) && is_numeric($original)
-            && strcmp((string)$current, (string)$original) === 0;
+        return is_numeric($attribute) && is_numeric($original)
+            && strcmp((string) $attribute, (string) $original) === 0;
     }
 
     /**

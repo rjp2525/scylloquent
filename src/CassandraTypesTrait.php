@@ -12,7 +12,7 @@ trait CassandraTypesTrait
      * @param $obj
      * @return bool
      */
-    public function isCassandraValueObject($obj)
+    public function isCassandraValueObject($obj): bool
     {
         return $obj instanceof Value;
     }
