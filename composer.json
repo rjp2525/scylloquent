@@ -1,5 +1,5 @@
 {
-  "name": "danielhe4rt/eloquent-scylladb",
+  "name": "danielhe4rt/scylloquent",
   "description": "Cassandra/ScyllaDB driver for Eloquent ORM",
   "keywords": [
     "laravel",
