@@ -11,7 +11,7 @@
     "model",
     "scylladb"
   ],
-  "homepage": "https://github.com/danielhe4rt/eloquent-scylladb",
+  "homepage": "https://github.com/danielhe4rt/scylloquent",
   "authors": [
     {
       "name": "Ahmedul Haque Abid",
