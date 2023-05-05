@@ -11,7 +11,7 @@ Cassandra driver for Eloquent ORM.
 Installation using composer:
 
 ```
-composer require a-h-abid/eloquent-cassandra
+composer require danielhe4rt/scylloquent
 ```
 #### Laravel
 And add the service provider in `config/app.php`:

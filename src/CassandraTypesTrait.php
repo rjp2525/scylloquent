@@ -38,79 +38,44 @@ trait CassandraTypesTrait
         $class = get_class($obj);
 
         $value = $obj;
-        switch ($class) {
-            case 'Cassandra\Date':
-                $value = $obj->seconds();
-                break;
-            case 'Cassandra\Time':
-                $value = $obj->__toString();
-                break;
-            case 'Cassandra\Timestamp':
-                $value = $obj->time();
-                break;
-            case 'Cassandra\Float':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Decimal':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Inet':
-                $value = $obj->address();
-                break;
-            case 'Cassandra\Uuid':
-                $value = $obj->uuid();
-                break;
-            case 'Cassandra\Bigint':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Blob':
-                $value = $obj->toBinaryString();
-                break;
-            case 'Cassandra\Smallint':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Timeuuid':
-                $value = $obj->uuid();
-                break;
-            case 'Cassandra\Tinyint':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Varint':
-                $value = $obj->value();
-                break;
-            case 'Cassandra\Collection':
-                $value = [];
-                foreach ($obj->values() as $item) {
-                    $value[] = $this->valueFromCassandraObject($item);
-                }
-                break;
-//            //TODO: convert to \DateInterval
+
+        $value = match ($class) {
+            'Cassandra\Date' => $obj->seconds(),
+            'Cassandra\Time' => $obj->__toString(),
+            'Cassandra\Timestamp' => $obj->time(),
+            'Cassandra\Float' => $obj->value(),
+            'Cassandra\Decimal' => $obj->value(),
+            'Cassandra\Inet' => $obj->address(),
+            'Cassandra\Uuid' => $obj->uuid(),
+            'Cassandra\Bigint' => $obj->value(),
+            'Cassandra\Blob' => $obj->toBinaryString(),
+            'Cassandra\Smallint' => $obj->value(),
+            'Cassandra\Timeuuid' => $obj->uuid(),
+            'Cassandra\Tinyint' => $obj->value(),
+            'Cassandra\Varint' => $obj->value(),
+            'Cassandra\Collection' | 'Cassandra\Set' | 'Cassandra\Tuple' => array_map(fn($item) => $this->valueFromCassandraObject($item), $obj->values()),
+            'Cassandra\UserTypeValue' => $this->valueFromCassandraObject($obj->values()),
+            // 'Cassandra\Duration'
+            'Cassandra\Map' => $this->valueFromCassandraMap($obj)
+
+
+        };
+
+        //TODO: convert to \DateInterval
 //            case 'Cassandra\Duration':
 //                $value = $obj->nanos();
 //                break;
-            case 'Cassandra\Map':
-                $values = array_map(function ($item) {
-                    return $this->valueFromCassandraObject($item);
-                }, $obj->values());
-
-                $value = array_combine($obj->keys(), $values);
-                break;
-            case 'Cassandra\Set':
-                $value = array_map(function ($item) {
-                    return $this->valueFromCassandraObject($item);
-                }, $obj->values());
-                break;
-            case 'Cassandra\Tuple':
-                $value = array_map(function ($item) {
-                    return $this->valueFromCassandraObject($item);
-                }, $obj->values());
-                break;
-            case 'Cassandra\UserTypeValue':
-                $value = $this->valueFromCassandraObject($obj->values());
-                break;
-        }
 
         return $value;
+    }
+
+    private function valueFromCassandraMap(mixed $obj): array
+    {
+        $values = array_map(function ($item) {
+            return $this->valueFromCassandraObject($item);
+        }, $obj->values());
+
+        return array_combine($obj->keys(), $values);
     }
 
 }
