@@ -71,7 +71,7 @@ abstract class Model extends BaseModel
     }
 
     /**
-     * @inheritdoc
+     * //TODO: Dusan HELPPPPPPPPP
      */
     public function freshTimestamp()
     {
@@ -93,7 +93,7 @@ abstract class Model extends BaseModel
             $value = parent::asDateTime($value);
         }
 
-        return new Timestamp($value->getTimestamp() * 1000);
+        return new Timestamp($value->getTimestamp() * 1000, 0);
     }
 
     /**
@@ -154,12 +154,8 @@ abstract class Model extends BaseModel
      *
      * @throws \Exception
      */
-    public function newCassandraCollection($rows)
+    public function newCassandraCollection(Rows|array $rows): Collection
     {
-        if (!is_array($rows) && !$rows instanceof Rows) {
-            throw new \Exception('Wrong type to create collection');//TODO: customize error
-        }
-
         $items = [];
         foreach ($rows as $row) {
             $items[] = $this->newFromBuilder($row);
@@ -383,9 +379,7 @@ abstract class Model extends BaseModel
         else {
             $saved = $this->performInsert($query);
 
-            if (!$this->getConnectionName() &&
-                $connection = $query->getConnection()
-            ) {
+            if (!$this->getConnectionName() && $connection = $query->getConnection()) {
                 $this->setConnection($connection->getName());
             }
         }

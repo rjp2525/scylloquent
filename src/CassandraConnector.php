@@ -2,6 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent;
 
+use Cassandra;
 use Illuminate\Database\Connectors\Connector;
 
 class CassandraConnector extends Connector
@@ -24,7 +25,7 @@ class CassandraConnector extends Connector
      */
     public function connect(array $config)
     {
-        $this->builder = \Cassandra::cluster();
+        $this->builder = Cassandra::cluster();
 
         $this->setConnectionOptions($config);
 
@@ -94,22 +95,17 @@ class CassandraConnector extends Connector
 
     /**
      * Set SSL Options
-     *
-     * @param array $config
-     * @return void
      */
-    protected function setSslOptions(array $config)
+    protected function setSslOptions(array $config): void
     {
-        if ($config['scheme'] != 'tls'
-            || !isset($config['ssl'])
-        ) {
+        if ($config['scheme'] != 'tls' || !isset($config['ssl'])) {
             return;
         }
 
-        $ssl = \Cassandra::ssl();
+        $ssl = Cassandra::ssl();
 
-        if ($config['ssl']['verify_peer'] == false) {
-            $ssl = $ssl->withVerifyFlags(\Cassandra::VERIFY_NONE);
+        if (!$config['ssl']['verify_peer']) {
+            $ssl = $ssl->withVerifyFlags(Cassandra::VERIFY_NONE);
         }
 
         if (!empty($config['ssl']['trusted_cert'])) {
@@ -120,8 +116,9 @@ class CassandraConnector extends Connector
             $ssl = $ssl->withClientCert($config['ssl']['client_cert']);
         }
 
+        // TODO: check with dusan wtf is this passphrase
         if (!empty($config['ssl']['private_cert'])) {
-            $ssl = $ssl->withPrivateKey($config['ssl']['private_cert']);
+            $ssl = $ssl->withPrivateKey($config['ssl']['private_cert'], '');
         }
 
         $this->builder->withSSL($ssl->build());
@@ -136,25 +133,25 @@ class CassandraConnector extends Connector
     protected function setDefaultQueryOptions(array $config)
     {
         if (isset($config['consistency']) && in_array($config['consistency'], [
-                \Cassandra::CONSISTENCY_ANY, \Cassandra::CONSISTENCY_ONE, \Cassandra::CONSISTENCY_TWO,
-                \Cassandra::CONSISTENCY_THREE, \Cassandra::CONSISTENCY_QUORUM, \Cassandra::CONSISTENCY_ALL,
-                \Cassandra::CONSISTENCY_SERIAL, \Cassandra::CONSISTENCY_QUORUM, \Cassandra::CONSISTENCY_LOCAL_QUORUM,
-                \Cassandra::CONSISTENCY_EACH_QUORUM, \Cassandra::CONSISTENCY_LOCAL_SERIAL, \Cassandra::CONSISTENCY_LOCAL_ONE,
+                Cassandra::CONSISTENCY_ANY, Cassandra::CONSISTENCY_ONE, Cassandra::CONSISTENCY_TWO,
+                Cassandra::CONSISTENCY_THREE, Cassandra::CONSISTENCY_QUORUM, Cassandra::CONSISTENCY_ALL,
+                Cassandra::CONSISTENCY_SERIAL, Cassandra::CONSISTENCY_QUORUM, Cassandra::CONSISTENCY_LOCAL_QUORUM,
+                Cassandra::CONSISTENCY_EACH_QUORUM, Cassandra::CONSISTENCY_LOCAL_SERIAL, Cassandra::CONSISTENCY_LOCAL_ONE,
             ])) {
 
             $this->builder->withDefaultConsistency($config['consistency']);
         }
 
-        $this->builder->withDefaultPageSize(intval(!empty($config['page_size']) ? $config['page_size'] : self::DEFAULT_PAGE_SIZE));
+        $this->builder->withDefaultPageSize(
+            intval(!empty($config['page_size']) ? $config['page_size'] : self::DEFAULT_PAGE_SIZE)
+        );
     }
 
     /**
      * Set timeouts for query execution
      * and cluster connection
-     *
-     * @param array $config
      */
-    protected function setTimeouts(array $config)
+    protected function setTimeouts(array $config): void
     {
         if (!empty($config['timeout'])) {
             $this->builder->withDefaultTimeout(intval($config['timeout']));

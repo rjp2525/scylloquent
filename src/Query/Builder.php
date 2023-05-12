@@ -50,7 +50,7 @@ class Builder extends BaseBuilder
     /**
      * @inheritdoc
      */
-    public function __construct(Connection $connection, Grammar $grammar = null, Processor $processor = null)
+    public function __construct(Connection $connection, ?Grammar $grammar = null, ?Processor $processor = null)
     {
         $this->connection = $connection;
         $this->grammar = $grammar ?: $connection->getQueryGrammar();

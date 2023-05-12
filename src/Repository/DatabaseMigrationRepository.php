@@ -2,6 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent\Repository;
 
+use Cassandra\Uuid;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository as BaseDatabaseMigrationRepository;
 
 class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
@@ -11,7 +12,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      *
      * @return array
      */
-    public function getRan()
+    public function getRan(): array
     {
         return $this->table()
             ->get()
@@ -24,13 +25,12 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      * Get list of migrations.
      *
      * @param  int  $steps
-     * @return array
      */
-    public function getMigrations($steps)
+    public function getMigrations($steps): array
     {
         return $this->table()
-            ->get()
             ->where('batch', '>=', '1')
+            ->get()
             ->sortByDesc('batch')
             ->take($steps)
             ->all();
@@ -38,14 +38,12 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
 
     /**
      * Get the last migration batch.
-     *
-     * @return array
      */
-    public function getLast()
+    public function getLast(): array
     {
         return $this->table()
-            ->get()
             ->where('batch', '=', $this->getLastBatchNumber())
+            ->get()
             ->all();
     }
 
@@ -57,9 +55,8 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function createRepository()
     {
         $schema = $this->getConnection()->getSchemaBuilder();
-        $driver = $this->getConnection()->getDriverName();
 
-        $schema->create($this->table, function ($table) use ($driver) {
+        $schema->create($this->table, function ($table) {
             // The migrations table is responsible for keeping track of which of the
             // migrations have actually run for the application. We'll create the
             // table to hold the migration file's path as well as the batch ID.
@@ -80,7 +77,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function log($file, $batch)
     {
         $record = [
-            'id' => $this->getConnection()->raw('uuid()'),
+            'id' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
             'migration' => $file,
             'batch' => $batch
         ];
@@ -96,13 +93,8 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      */
     public function delete($migration)
     {
-        $row = $this->table()
-            ->get()
+        $this->table()
             ->where('migration', '=', $migration->migration)
-            ->first();
-
-        if ($row) {
-            $this->table()->where('id', '=', $row['id'])->delete();
-        }
+            ->delete();
     }
 }

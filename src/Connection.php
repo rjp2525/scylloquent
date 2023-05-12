@@ -5,38 +5,33 @@ namespace DanielHe4rt\Scylloquent;
 use Cassandra;
 use Cassandra\BatchStatement;
 use Cassandra\Cluster;
+use Cassandra\Session;
 use DanielHe4rt\Scylloquent\Exceptions\CassandraNotSupportedException;
+use DanielHe4rt\Scylloquent\Query\Builder;
 use Illuminate\Database\Connection as BaseConnection;
 
 class Connection extends BaseConnection
 {
     /**
      * The Cassandra keyspace
-     *
-     * @var string
      */
-    protected $keyspace;
+    protected string $keyspace;
 
     /**
      * The Cassandra connection handler.
-     *
-     * @var \Cassandra\Session
      */
-    protected $session;
+    protected Session $session;
 
     /**
-     * The config
-     *
+     * The config file (config/database.php)
      * @var array
      */
     protected $config;
 
     /**
      * The Cassandra cluster
-     *
-     * @var Cluster
      */
-    protected $cluster;
+    protected Cluster $cluster;
 
     /**
      * Connection constructor.
@@ -62,12 +57,8 @@ class Connection extends BaseConnection
 
     /**
      * Get keyspace name from config
-     *
-     * @param array $config
-     *
-     * @return string|null
      */
-    protected function getDatabase(array $config)
+    protected function getDatabase(array $config): ?string
     {
         $keyspaceName = null;
 
@@ -82,12 +73,10 @@ class Connection extends BaseConnection
      * Begin a fluent query against a database table.
      *
      * @param string $table
-     * @return Query\Builder
      */
-    public function table($table, $as = NULL)
+    public function table($table, $as = NULL): Builder
     {
         $processor = $this->getPostProcessor();
-
         $query = new Query\Builder($this, null, $processor);
 
         return $query->from($table, $as);
@@ -95,10 +84,8 @@ class Connection extends BaseConnection
 
     /**
      * Get a new query builder instance.
-     *
-     * @return \DanielHe4rt\Scylloquent\Query\Builder
      */
-    public function query()
+    public function query(): Builder
     {
         return new Query\Builder(
             $this, $this->getQueryGrammar(), $this->getPostProcessor()
@@ -106,31 +93,25 @@ class Connection extends BaseConnection
     }
 
     /**
-     * return Cassandra cluster.
-     *
-     * @return Cluster
+     * Return Cassandra cluster.
      */
-    public function getCassandraCluster()
+    public function getCassandraCluster(): Cluster
     {
         return $this->cluster;
     }
 
     /**
      * return Cassandra Session.
-     *
-     * @return \Cassandra\Session
      */
-    public function getCassandraSession()
+    public function getCassandraSession(): Session
     {
         return $this->session;
     }
 
     /**
      * Return the Cassandra keyspace
-     *
-     * @return string
      */
-    public function getKeyspace()
+    public function getKeyspace(): string
     {
         return $this->keyspace;
     }
@@ -138,18 +119,16 @@ class Connection extends BaseConnection
     /**
      * Disconnect from the underlying Cassandra connection.
      */
-    public function disconnect()
+    public function disconnect(): void
     {
-        $this->session->close();
-        $this->session = null;
+        $this->session->close(5);
+        unset($this->session);
     }
 
     /**
      * Get the PDO driver name.
-     *
-     * @return string
      */
-    public function getDriverName()
+    public function getDriverName(): string
     {
         return 'cassandra';
     }
@@ -194,7 +173,7 @@ class Connection extends BaseConnection
      *
      * @return bool
      */
-    public function batchStatement($queries = [], $bindings = [], $type = Cassandra::BATCH_LOGGED, array $customOptions = [])
+    public function batchStatement(array $queries = [], array $bindings = [], int $type = Cassandra::BATCH_LOGGED, array $customOptions = [])
     {
         return $this->run($queries, $bindings, function ($queries, $bindings) use ($type, $customOptions) {
             if ($this->pretending()) {
@@ -204,7 +183,7 @@ class Connection extends BaseConnection
             $batch = new BatchStatement($type);
 
             foreach ($queries as $k => $query) {
-                $preparedStatement = $this->session->prepare($query);
+                $preparedStatement = $this->session->prepare($query, []);
                 $batch->add($preparedStatement, $bindings[$k]);
             }
 
@@ -237,14 +216,11 @@ class Connection extends BaseConnection
      *
      * @return int
      */
-    public function affectingStatement($query, $bindings = [], array $customOptions = [])
+    public function affectingStatement($query, $bindings = [], array $customOptions = []): int
     {
         return $this->runStatement($query, $bindings, $customOptions, 0, 1);
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function getDefaultPostProcessor()
     {
         return new Query\Processor();
@@ -282,12 +258,10 @@ class Connection extends BaseConnection
 
     /**
      * Reconnect to the database if connection is missing.
-     *
-     * @return void
      */
-    public function reconnectIfMissingConnection()
+    public function reconnectIfMissingConnection(): void
     {
-        if (is_null($this->session)) {
+        if (!isset($this->session)) {
             $this->session = $this->cluster->connect($this->keyspace);
         }
     }
@@ -315,7 +289,13 @@ class Connection extends BaseConnection
      *
      * @return mixed
      */
-    protected function runStatement($query, $bindings = [], array $customOptions = [], $defaultFailed = [], $defaultSuccess = null)
+    protected function runStatement(
+        string $query,
+        array  $bindings = [],
+        array  $customOptions = [],
+        array  $defaultFailed = [],
+        mixed $defaultSuccess = null
+    )
     {
         return $this->run($query, $bindings, function ($query, $bindings) use ($customOptions, $defaultFailed, $defaultSuccess) {
             if ($this->pretending()) {

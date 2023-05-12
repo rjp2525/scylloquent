@@ -3,6 +3,7 @@
 namespace DanielHe4rt\Scylloquent;
 
 use Cassandra\Value;
+use Illuminate\Support\Facades\Log;
 
 trait CassandraTypesTrait
 {
@@ -37,8 +38,6 @@ trait CassandraTypesTrait
 
         $class = get_class($obj);
 
-        $value = $obj;
-
         $value = match ($class) {
             'Cassandra\Date' => $obj->seconds(),
             'Cassandra\Time' => $obj->__toString(),
@@ -53,12 +52,11 @@ trait CassandraTypesTrait
             'Cassandra\Timeuuid' => $obj->uuid(),
             'Cassandra\Tinyint' => $obj->value(),
             'Cassandra\Varint' => $obj->value(),
-            'Cassandra\Collection' | 'Cassandra\Set' | 'Cassandra\Tuple' => array_map(fn($item) => $this->valueFromCassandraObject($item), $obj->values()),
+            'Cassandra\Collection', 'Cassandra\Set', 'Cassandra\Tuple' => array_map(fn($item) => $this->valueFromCassandraObject($item), $obj->values()),
             'Cassandra\UserTypeValue' => $this->valueFromCassandraObject($obj->values()),
             // 'Cassandra\Duration'
-            'Cassandra\Map' => $this->valueFromCassandraMap($obj)
-
-
+            'Cassandra\Map' => $this->valueFromCassandraMap($obj),
+            default => throw ScylloquentException::typeNotDefined($class)
         };
 
         //TODO: convert to \DateInterval

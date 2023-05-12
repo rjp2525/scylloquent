@@ -15,8 +15,9 @@ class Builder extends EloquentBuilder
      *
      * @return Collection
      */
-    public function hydrateRows($rows)
+    public function hydrateRows(Rows|array $rows): Collection
     {
+        /** @var Model $instance */
         $instance = $this->newModelInstance();
 
         return $instance->newCassandraCollection($rows);
@@ -31,7 +32,7 @@ class Builder extends EloquentBuilder
      *
      * @throws \Exception
      */
-    public function getPage($columns = ['*'])
+    public function getPage($columns = ['*']): Collection|Rows
     {
         $builder = $this->applyScopes();
 
@@ -49,20 +50,17 @@ class Builder extends EloquentBuilder
      */
     public function getModelsPage($columns = ['*'])
     {
-        $results = $this->query->getPage($columns);
+        $results = $this->getPage($columns);
 
         if ($results instanceof Collection) {
             $rows = $results->getRows();
-            if ($rows->isLastPage()) {
-                $results = $results->all();
-            } else {
-                $results = $rows;
-            }
+            $results = $rows->isLastPage() ? $results->all() : $rows;
+
         } elseif (!$results instanceof Rows) {
             throw new \Exception('Invalid type of getPage response. Expected lroman242\LaravelCassandra\Collection or Cassandra\Rows');
         }
 
-        return $this->model->hydrateRows($results);
+        return $this->hydrateRows($results);
     }
 
     /**
@@ -70,11 +68,9 @@ class Builder extends EloquentBuilder
      *
      * @param array $columns
      *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     *
      * @throws \Exception
      */
-    public function get($columns = ['*'])
+    public function get($columns = ['*']): array|\Illuminate\Database\Eloquent\Collection|Collection
     {
         $builder = $this->applyScopes();
 
@@ -86,26 +82,20 @@ class Builder extends EloquentBuilder
      *
      * @param  array  $columns
      *
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     *
      * @throws \Exception
      */
-    public function getModels($columns = ['*'])
+    public function getModels($columns = ['*']): Collection
     {
         $results = $this->query->get($columns);
 
         if ($results instanceof Collection) {
             $rows = $results->getRows();
-            if ($rows->isLastPage()) {
-                $results = $results->all();
-            } else {
-                $results = $rows;
-            }
+            $results = $rows->isLastPage() ? $results->all() : $rows;
         } elseif (!$results instanceof Rows) {
-            throw new \Exception('Invalid type of getPage response. Expected lroman242\LaravelCassandra\Collection or Cassandra\Rows');
+            throw new \Exception('Invalid type of getPage response. Expected DanielHe4rt\Scylloquent\Collection or Cassandra\Rows');
         }
 
-        return $this->model->hydrateRows($results);
+        return $this->hydrateRows($results);
     }
 
     /**
@@ -114,10 +104,9 @@ class Builder extends EloquentBuilder
      * @param  array  $values
      * @return array
      */
-    protected function addUpdatedAtColumn(array $values)
+    protected function addUpdatedAtColumn(array $values): array
     {
-        if (!$this->model->usesTimestamps() ||
-            is_null($this->model->getUpdatedAtColumn())) {
+        if (!$this->model->usesTimestamps() || is_null($this->model->getUpdatedAtColumn())) {
             return $values;
         }
 
@@ -135,6 +124,5 @@ class Builder extends EloquentBuilder
 
         return $values;
     }
-
 
 }

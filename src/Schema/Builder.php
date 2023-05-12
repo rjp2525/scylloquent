@@ -3,45 +3,41 @@
 namespace DanielHe4rt\Scylloquent\Schema;
 
 use Closure;
+use DanielHe4rt\Scylloquent\Connection;
 use Illuminate\Database\Schema\Builder as BaseBuilder;
+use LogicException;
 
 class Builder extends BaseBuilder
 {
-    /** @var \DanielHe4rt\Scylloquent\Connection */
+    /** @var Connection */
     protected $connection;
+
+    /** @var Grammar */
+    protected $grammar;
 
     /**
      * Determine if the given table exists.
-     *
-     * @param  string  $table
-     * @return bool
      */
-    public function hasTable($table)
+    public function hasTable($table): bool
     {
-        $table = $this->connection->getTablePrefix().$table;
+        $table = $this->connection->getTablePrefix() . $table;
         $keyspace = $this->connection->getKeyspace();
 
         $args = ['table_name' => $table, 'keyspace_name' => $keyspace];
 
-        $result = $this->connection->selectFromWriteConnection(
+        return count($this->connection->selectFromWriteConnection(
             $this->grammar->compileTableExists(), $args
-        );
-
-        return $result->count() > 0;
+        )) > 0;
     }
 
     /**
      * Create a new command set with a Closure.
-     *
-     * @param  string  $table
-     * @param  \Closure|null  $callback
-     * @return \Illuminate\Database\Schema\Blueprint
      */
-    protected function createBlueprint($table, Closure $callback = null)
+    protected function createBlueprint($table, Closure $callback = null): Blueprint
     {
         $prefix = $this->connection->getConfig('prefix_indexes')
-                    ? $this->connection->getConfig('prefix')
-                    : '';
+            ? $this->connection->getConfig('prefix')
+            : '';
 
         if (isset($this->resolver)) {
             return call_user_func($this->resolver, $table, $callback, $prefix);
@@ -52,17 +48,13 @@ class Builder extends BaseBuilder
 
     /**
      * Drop all tables from the database.
-     *
-     * @return void
-     *
-     * @throws \LogicException
      */
-    public function dropAllTables()
+    public function dropAllTables(): void
     {
         $tables = [];
 
         foreach ($this->getAllTables() as $row) {
-            $row = (array) $row;
+            $row = (array)$row;
 
             $tables[] = reset($row);
         }
@@ -79,11 +71,9 @@ class Builder extends BaseBuilder
     }
 
     /**
-     * Get all of the table names for the database.
-     *
-     * @return array
+     * Get all the table names for the database.
      */
-    public function getAllTables()
+    public function getAllTables(): array
     {
         return $this->connection->select(
             $this->grammar->compileGetAllTables(),

@@ -64,38 +64,30 @@ class Collection extends BaseCollection
      *
      * @return Collection
      */
-    public function nextPage()
+    public function nextPage(): Collection
     {
         if ($this->rows !== null && !$this->isLastPage()) {
-            /** @var Model $instance */
+            /** @var Model $model */
             $model = $this->first();
 
-            $nextPageRows = $this->rows->nextPage();
-            $nextPageCollection = $model->newCassandraCollection($nextPageRows);
+            $nextPageRows = $this->rows->nextPage(5);
 
-            return $nextPageCollection;
+            return $model->newCassandraCollection($nextPageRows);
         }
 
-        return new self;
+        return new self();
     }
 
-    /**
-     * Get rows instance
-     *
-     * @return \Cassandra\Rows
-     */
-    public function getRows()
+    /** Get rows instance */
+    public function getRows(): Rows
     {
         return $this->rows;
     }
 
     /**
-     * Update current collection with results from
-     * the next page
-     *
-     * @return Collection
+     * Update current collection with results from the next page
      */
-    public function appendNextPage()
+    public function appendNextPage(): self
     {
         $nextPage = $this->nextPage();
 
@@ -111,9 +103,8 @@ class Collection extends BaseCollection
      * Merge the collection with the given items.
      *
      * @param  \ArrayAccess|array  $items
-     * @return static
      */
-    public function merge($items)
+    public function merge($items): self
     {
         $dictionary = $this->getDictionary();
 
@@ -121,21 +112,20 @@ class Collection extends BaseCollection
             $dictionary[(string) $item->getKey()] = $item;
         }
 
-        return new static(array_values($dictionary));
+        return new self(array_values($dictionary));
     }
 
     /**
      * Reload a fresh model instance from the database for all the entities.
      *
-     * @param  array|string  $with
-     * @return static
      */
-    public function fresh($with = [])
+    public function fresh($with = []): self
     {
         if ($this->isEmpty()) {
-            return new static([]);
+            return new self();
         }
 
+        /** @var Model $model */
         $model = $this->first();
 
         $freshModels = $model->newQueryWithoutScopes()
@@ -146,9 +136,9 @@ class Collection extends BaseCollection
         return $this->map(function ($model) use ($freshModels) {
             if ($model->exists && isset($freshModels[$model->getKey()])) {
                 return $freshModels[$model->getKey()];
-            } else {
-                return null;
             }
+
+            return null;
         });
     }
 }
