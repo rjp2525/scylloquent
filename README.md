@@ -1,12 +1,12 @@
-# Eloquent Cassandra
+# Scylloquent -> ScyllaDB/CassandraDB Eloquent ORM
 
-Cassandra driver for Eloquent ORM.
+Scylla/Cassandra driver for Eloquent ORM.
 
 
 ## Installation
 ------------
 
-*Note:* Make sure you have the Cassandra PHP driver installed (version 1.3+). You can find more information at [DataStax PHP Driver](http://datastax.github.io/php-driver/).
+*Note:* Make sure you have the He4rt ScyllaDB PHP driver installed (version 1.3+). You can find more information at [He4rt ScyllaDB PHP Driver](https://github.com/he4rt/scylladb-php-driver).
 
 Installation using composer:
 
