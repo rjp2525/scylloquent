@@ -5,6 +5,7 @@ namespace DanielHe4rt\Scylloquent\Query;
 use DanielHe4rt\Scylloquent\Collection;
 use DanielHe4rt\Scylloquent\Connection;
 use DanielHe4rt\Scylloquent\CassandraTypesTrait;
+use Illuminate\Contracts\Database\Query\Expression as ExpressionContract;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Arr;
 
@@ -306,5 +307,16 @@ class Builder extends BaseBuilder
         }
 
         return $collection;
+    }
+
+    public function cleanBindings(array $bindings)
+    {
+        return collect($bindings)
+            ->reject(function ($binding) {
+                return $binding instanceof ExpressionContract;
+            })
+            //->map([$this, 'castBinding'])
+            ->values()
+            ->all();
     }
 }

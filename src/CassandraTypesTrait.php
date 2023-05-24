@@ -38,7 +38,7 @@ trait CassandraTypesTrait
 
         $class = get_class($obj);
 
-        $value = match ($class) {
+        return match ($class) {
             'Cassandra\Date' => $obj->seconds(),
             'Cassandra\Time' => $obj->__toString(),
             'Cassandra\Timestamp' => $obj->time(),
@@ -64,7 +64,6 @@ trait CassandraTypesTrait
 //                $value = $obj->nanos();
 //                break;
 
-        return $value;
     }
 
     private function valueFromCassandraMap(mixed $obj): array

@@ -2,6 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent\Schema;
 
+use Cassandra\Rows;
 use Closure;
 use DanielHe4rt\Scylloquent\Connection;
 use Illuminate\Database\Schema\Builder as BaseBuilder;
@@ -25,9 +26,10 @@ class Builder extends BaseBuilder
 
         $args = ['table_name' => $table, 'keyspace_name' => $keyspace];
 
-        return count($this->connection->selectFromWriteConnection(
-            $this->grammar->compileTableExists(), $args
-        )) > 0;
+        /** @var Rows $rows */
+        $rows = $this->connection->selectFromWriteConnection($this->grammar->compileTableExists(), $args);
+
+        return $rows->count() > 0;
     }
 
     /**
@@ -73,7 +75,7 @@ class Builder extends BaseBuilder
     /**
      * Get all the table names for the database.
      */
-    public function getAllTables(): array
+    public function getAllTables(): Rows
     {
         return $this->connection->select(
             $this->grammar->compileGetAllTables(),

@@ -16,7 +16,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     {
         return $this->table()
             ->get()
-            ->sortBy('batch')
+            ->sortBy('batch_id')
             ->pluck('migration')
             ->all();
     }
@@ -29,9 +29,9 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function getMigrations($steps): array
     {
         return $this->table()
-            ->where('batch', '>=', '1')
+            ->where('batch_id', '>=', '1')
             ->get()
-            ->sortByDesc('batch')
+            ->sortByDesc('batch_id')
             ->take($steps)
             ->all();
     }
@@ -42,7 +42,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function getLast(): array
     {
         return $this->table()
-            ->where('batch', '=', $this->getLastBatchNumber())
+            ->where('batch_id', '=', $this->getLastBatchNumber())
             ->get()
             ->all();
     }
@@ -52,7 +52,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      *
      * @return void
      */
-    public function createRepository()
+    public function createRepository(): void
     {
         $schema = $this->getConnection()->getSchemaBuilder();
 
@@ -61,9 +61,9 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
             // migrations have actually run for the application. We'll create the
             // table to hold the migration file's path as well as the batch ID.
             $table->uuid('id');
+            $table->integer('batch_id');
             $table->string('migration');
-            $table->integer('batch');
-            $table->primary(['id', 'batch']);
+            $table->primary(['id', 'batch_id']);
         });
     }
 
@@ -74,12 +74,12 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      * @param  int  $batch
      * @return void
      */
-    public function log($file, $batch)
+    public function log($file, $batch): void
     {
         $record = [
-            'id' => \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            'id' => new Uuid(),
             'migration' => $file,
-            'batch' => $batch
+            'batch_id' => $batch
         ];
 
         $this->table()->insert($record);
@@ -91,10 +91,12 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
      * @param  object  $migration
      * @return void
      */
-    public function delete($migration)
+    public function delete($migration): void
     {
         $this->table()
             ->where('migration', '=', $migration->migration)
             ->delete();
     }
+
+
 }
