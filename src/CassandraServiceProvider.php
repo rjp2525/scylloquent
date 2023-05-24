@@ -28,7 +28,7 @@ class CassandraServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->singleton('migration.repository', function ($app) {
+        $this->app->extend('migration.repository', function ($repository, $app) {
             $table = $app['config']['database.migrations'];
 
             return new DatabaseMigrationRepository($app['db'], $table);
