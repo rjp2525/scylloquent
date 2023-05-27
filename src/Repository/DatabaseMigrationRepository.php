@@ -98,5 +98,8 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
             ->delete();
     }
 
-
+    public function getLastBatchNumber()
+    {
+        return $this->table()->max('batch_id');
+    }
 }
