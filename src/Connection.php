@@ -6,6 +6,7 @@ use Cassandra;
 use Cassandra\BatchStatement;
 use Cassandra\Cluster;
 use Cassandra\Session;
+use DanielHe4rt\Scylloquent\Exceptions\ScylloquentException;
 use DanielHe4rt\Scylloquent\Query\Builder;
 use Illuminate\Database\Connection as BaseConnection;
 
@@ -292,7 +293,7 @@ class Connection extends BaseConnection
         string $query,
         array  $bindings = [],
         array  $customOptions = [],
-        array  $defaultFailed = [],
+        mixed  $defaultFailed = [],
         mixed  $defaultSuccess = null
     )
     {

@@ -2,9 +2,9 @@
 
 namespace DanielHe4rt\Scylloquent\Tests\Units;
 
-use DanielHe4rt\Scylloquent\Tests\TestCase;
 use DanielHe4rt\Scylloquent\Connection;
-use DanielHe4rt\Scylloquent\Exceptions\CassandraNotSupportedException;
+use DanielHe4rt\Scylloquent\Exceptions\ScylloquentRuntimeException;
+use DanielHe4rt\Scylloquent\Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 
 class ConnectionTest extends TestCase
@@ -373,7 +373,7 @@ class ConnectionTest extends TestCase
      */
     public function testConnectionTransaction()
     {
-        $this->expectException(CassandraNotSupportedException::class);
+        $this->expectException(ScylloquentRuntimeException::class);
 
         DB::connection('cassandra')->transaction(function ($query) {
             $query->get();
@@ -385,7 +385,7 @@ class ConnectionTest extends TestCase
      */
     public function testConnectionBeginTransaction()
     {
-        $this->expectException(CassandraNotSupportedException::class);
+        $this->expectException(ScylloquentRuntimeException::class);
 
         DB::connection('cassandra')->beginTransaction();
     }
@@ -395,7 +395,7 @@ class ConnectionTest extends TestCase
      */
     public function testConnectionRollback()
     {
-        $this->expectException(CassandraNotSupportedException::class);
+        $this->expectException(ScylloquentRuntimeException::class);
 
         DB::connection('cassandra')->rollback();
     }
@@ -405,7 +405,7 @@ class ConnectionTest extends TestCase
      */
     public function testConnectionCommit()
     {
-        $this->expectException(CassandraNotSupportedException::class);
+        $this->expectException(ScylloquentRuntimeException::class);
 
         DB::connection('cassandra')->commit();
     }
@@ -415,7 +415,7 @@ class ConnectionTest extends TestCase
      */
     public function testConnectionTransactionLevel()
     {
-        $this->expectException(CassandraNotSupportedException::class);
+        $this->expectException(ScylloquentRuntimeException::class);
 
         DB::connection('cassandra')->transactionLevel();
     }
