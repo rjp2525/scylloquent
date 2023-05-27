@@ -64,7 +64,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
             $table->uuid('id');
             $table->integer('batch_id');
             $table->string('migration');
-            $table->primary(['id', 'batch_id']);
+            $table->primary(['id', 'batch_id', 'migration']);
         });
     }
 
