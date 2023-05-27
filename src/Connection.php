@@ -293,7 +293,7 @@ class Connection extends BaseConnection
         string $query,
         array  $bindings = [],
         array  $customOptions = [],
-        array  $defaultFailed = [],
+        mixed  $defaultFailed = [],
         mixed  $defaultSuccess = null
     )
     {
