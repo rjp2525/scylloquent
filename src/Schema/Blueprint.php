@@ -3,9 +3,8 @@
 namespace DanielHe4rt\Scylloquent\Schema;
 
 use Closure;
-use DanielHe4rt\Scylloquent\Exceptions\CassandraNoPrimarySetException;
+use DanielHe4rt\Scylloquent\Exceptions\ScylloquentRuntimeException;
 use Illuminate\Database\Schema\Blueprint as BaseBlueprint;
-use Illuminate\Database\Schema\ColumnDefinition;
 use Illuminate\Support\Fluent;
 
 class Blueprint extends BaseBlueprint
@@ -52,7 +51,7 @@ class Blueprint extends BaseBlueprint
     public function compilePrimary(): string
     {
         if (empty($this->primaryKeys)) {
-            throw new CassandraNoPrimarySetException('No primary key has been set for the table.');
+            throw ScylloquentRuntimeException::missingPartitionKey();
         }
 
         $cql = sprintf(

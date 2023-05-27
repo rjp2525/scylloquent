@@ -22,22 +22,22 @@ class Grammar extends BaseGrammar
         'allowFiltering'
     ];
 
-    public function compileAllowFiltering(Builder $query, $bool)
+    public function compileAllowFiltering(Builder $query, bool $allowFiltering)
     {
-        return (bool) $bool ? 'ALLOW FILTERING' : '';
+        return $allowFiltering ? 'ALLOW FILTERING' : '';
     }
 
     public function compileTtl(Builder $query, $ttl)
     {
-        return (int) $ttl ? 'using ttl ' . (int) $ttl : '';
+        return (int)$ttl ? 'using ttl ' . (int)$ttl : '';
     }
 
     /**
      * Compile an insert statement into SQL.
      *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @param  array  $options
+     * @param \Illuminate\Database\Query\Builder $query
+     * @param array $values
+     * @param array $options
      * @return string
      */
     public function compileInsertWithOptions(Builder $query, array $values, array $options = [])
@@ -51,7 +51,7 @@ class Grammar extends BaseGrammar
             return "insert into {$table} default values";
         }
 
-        if (! is_array(reset($values))) {
+        if (!is_array(reset($values))) {
             $values = [$values];
         }
 
@@ -61,7 +61,7 @@ class Grammar extends BaseGrammar
         // to the query. Each insert should have the exact same number of parameter
         // bindings so we will loop through the record and parameterize them all.
         $parameters = collect($values)->map(function ($record) {
-            return '('.$this->parameterize($record).')';
+            return '(' . $this->parameterize($record) . ')';
         })->implode(', ');
 
         $queryWith = '';
@@ -70,18 +70,17 @@ class Grammar extends BaseGrammar
             $queryWith .= $this->compileTtl($query, $options['ttl']);
         }
 
-        return "insert into $table ($columns) values $parameters $queryWith";
+        return sprintf('insert into %s (%s) values %s %s', $table, $columns, $parameters, $queryWith);
     }
 
     /**
      * Compile an update statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  array  $values
-     * @param  array  $options
-     * @return string
      */
-    public function compileUpdateWithOptions(Builder $query, array $values, array $options = [])
+    public function compileUpdateWithOptions(
+        Builder $query,
+        array   $values,
+        array   $options = []
+    ): string
     {
         $table = $this->wrapTable($query->from);
 
@@ -108,16 +107,14 @@ class Grammar extends BaseGrammar
 
     /**
      * Compile an update statement without joins into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $table
-     * @param  string  $columns
-     * @param  string  $where
-     * @param  array   $options
-     *
-     * @return string
      */
-    protected function compileUpdateWithoutJoinsWithOptions(Builder $query, $table, $columns, $where, $options = [])
+    protected function compileUpdateWithoutJoinsWithOptions(
+        Builder $query,
+        string  $table,
+        string  $columns,
+        string  $where,
+        array   $options = []
+    ): string
     {
         $queryWith = '';
 
@@ -125,6 +122,6 @@ class Grammar extends BaseGrammar
             $queryWith .= $this->compileTtl($query, $options['ttl']);
         }
 
-        return "update {$table} $queryWith set {$columns} {$where}";
+        return sprintf('update %s %s set %s %s', $table, $queryWith, $columns, $where);
     }
 }

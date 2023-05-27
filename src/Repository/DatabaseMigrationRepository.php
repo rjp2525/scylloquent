@@ -3,6 +3,7 @@
 namespace DanielHe4rt\Scylloquent\Repository;
 
 use Cassandra\Uuid;
+use DanielHe4rt\Scylloquent\Schema\Blueprint;
 use Illuminate\Database\Migrations\DatabaseMigrationRepository as BaseDatabaseMigrationRepository;
 
 class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
@@ -24,7 +25,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     /**
      * Get list of migrations.
      *
-     * @param  int  $steps
+     * @param int $steps
      */
     public function getMigrations($steps): array
     {
@@ -56,7 +57,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     {
         $schema = $this->getConnection()->getSchemaBuilder();
 
-        $schema->create($this->table, function ($table) {
+        $schema->create($this->table, function (Blueprint $table) {
             // The migrations table is responsible for keeping track of which of the
             // migrations have actually run for the application. We'll create the
             // table to hold the migration file's path as well as the batch ID.
@@ -70,8 +71,8 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     /**
      * Log that a migration was run.
      *
-     * @param  string  $file
-     * @param  int  $batch
+     * @param string $file
+     * @param int $batch
      * @return void
      */
     public function log($file, $batch): void
@@ -88,7 +89,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     /**
      * Remove a migration from the log.
      *
-     * @param  object  $migration
+     * @param object $migration
      * @return void
      */
     public function delete($migration): void

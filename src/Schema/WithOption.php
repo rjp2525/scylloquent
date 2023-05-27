@@ -4,42 +4,33 @@ namespace DanielHe4rt\Scylloquent\Schema;
 
 class WithOption
 {
-    /** @var array */
-    protected $orders = [];
 
-    /** @var array */
-    protected $attributes = [];
+    /** @var array<int, string> $orders */
+    protected array $orders = [];
+
+    /** @var array<int, string> $orders */
+    protected array $attributes = [];
 
     /**
      * Add Order By Field with Direction
-     *
-     * @param string $field
-     * @param string $dir
-     * @return void
      */
-    public function orderBy($field, $dir = 'asc')
+    public function orderBy(string $field, string $dir = 'asc'): void
     {
         $this->orders[] = "\"$field\" $dir";
     }
 
     /**
      * Add attribute
-     *
-     * @param string $key
-     * @param string $value
-     * @return void
      */
-    public function attribute($key, $value)
+    public function attribute(string $key, string $value): void
     {
         $this->attributes[] = "$key=$value";
     }
 
     /**
      * Compile to CQL
-     *
-     * @return string
      */
-    public function compile()
+    public function compile(): string
     {
         if (empty($this->attributes) && empty($this->orders)) {
             return '';

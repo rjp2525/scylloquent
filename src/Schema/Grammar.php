@@ -2,10 +2,10 @@
 
 namespace DanielHe4rt\Scylloquent\Schema;
 
-use Illuminate\Support\Fluent;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Schema\Grammars\Grammar as BaseGrammar;
+use Illuminate\Support\Fluent;
 
 class Grammar extends BaseGrammar
 {
@@ -78,11 +78,11 @@ class Grammar extends BaseGrammar
     protected function compileCreateEngine($sql, Connection $connection, Blueprint $blueprint): string
     {
         if (isset($blueprint->engine)) {
-            return $sql . ' engine = ' . $blueprint->engine;
+            return sprintf('%s engine = %s', $sql, $blueprint->engine);
         }
 
         if (!is_null($engine = $connection->getConfig('engine'))) {
-            return $sql . ' engine = ' . $engine;
+            return sprintf('%s engine = %s', $sql, $engine);
         }
 
         return $sql;
@@ -93,9 +93,13 @@ class Grammar extends BaseGrammar
      */
     public function compileAdd(Blueprint $blueprint, Fluent $command): string
     {
-        $columns = $this->prefixArray('add', $this->getColumns($blueprint));
+        $table = $this->wrapTable($blueprint);
+        $columns = implode(
+            ', ',
+            $this->prefixArray('add', $this->getColumns($blueprint))
+        );
 
-        return 'alter table ' . $this->wrapTable($blueprint) . ' ' . implode(', ', $columns);
+        return sprintf('ALTER TABLE %s %s', $table, $columns);
     }
 
     /**
@@ -154,7 +158,8 @@ class Grammar extends BaseGrammar
      */
     public function compileDrop(Blueprint $blueprint, Fluent $command): string
     {
-        return 'drop table ' . $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint);
+        return sprintf('drop table %s', $table);
     }
 
     /**
@@ -162,7 +167,8 @@ class Grammar extends BaseGrammar
      */
     public function compileDropTable(string $table): string
     {
-        return 'drop table ' . $this->wrapTable($table);
+        $table = $this->wrapTable($table);
+        return sprintf('drop table %s', $table);
     }
 
     /**
@@ -170,7 +176,8 @@ class Grammar extends BaseGrammar
      */
     public function compileDropIfExists(Blueprint $blueprint, Fluent $command): string
     {
-        return 'drop table if exists ' . $this->wrapTable($blueprint);
+        $table = $this->wrapTable($blueprint);
+        return sprintf('drop table if exists %s', $table);
     }
 
     /**

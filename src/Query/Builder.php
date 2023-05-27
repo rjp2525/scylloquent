@@ -2,6 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent\Query;
 
+use Cassandra\Rows;
 use DanielHe4rt\Scylloquent\Collection;
 use DanielHe4rt\Scylloquent\Connection;
 use DanielHe4rt\Scylloquent\CassandraTypesTrait;
@@ -198,7 +199,7 @@ class Builder extends BaseBuilder
                         break;
                     }
 
-                    $results = $results->nextPage();
+                    $results = $results->nextPage(2);
                     continue;
                 }
 
@@ -295,12 +296,8 @@ class Builder extends BaseBuilder
 
     /**
      * Store in Collections
-     *
-     * @param Collection $collection
-     * @param array $results
-     * @return Collection
      */
-    protected function storeInCollection(Collection $collection, $results)
+    protected function storeInCollection(Collection $collection, Rows $results): Collection
     {
         foreach ($results as $item) {
             $collection->push($item);

@@ -1,6 +1,6 @@
 <?php
 
-namespace DanielHe4rt\Scylloquent;
+namespace DanielHe4rt\Scylloquent\Exceptions;
 
 use Symfony\Component\HttpFoundation\Response;
 

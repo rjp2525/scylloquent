@@ -6,7 +6,6 @@ use Cassandra\Rows;
 use Closure;
 use DanielHe4rt\Scylloquent\Connection;
 use Illuminate\Database\Schema\Builder as BaseBuilder;
-use LogicException;
 
 class Builder extends BaseBuilder
 {

@@ -3,7 +3,7 @@
 namespace DanielHe4rt\Scylloquent;
 
 use Cassandra\Value;
-use Illuminate\Support\Facades\Log;
+use DanielHe4rt\Scylloquent\Exceptions\ScylloquentException;
 
 trait CassandraTypesTrait
 {
@@ -54,16 +54,14 @@ trait CassandraTypesTrait
             'Cassandra\Varint' => $obj->value(),
             'Cassandra\Collection', 'Cassandra\Set', 'Cassandra\Tuple' => array_map(fn($item) => $this->valueFromCassandraObject($item), $obj->values()),
             'Cassandra\UserTypeValue' => $this->valueFromCassandraObject($obj->values()),
-            // 'Cassandra\Duration'
             'Cassandra\Map' => $this->valueFromCassandraMap($obj),
             default => throw ScylloquentException::typeNotDefined($class)
         };
 
-        //TODO: convert to \DateInterval
-//            case 'Cassandra\Duration':
-//                $value = $obj->nanos();
-//                break;
-
+        // TODO: convert to \DateInterval
+        //    case 'Cassandra\Duration':
+        //        $value = $obj->nanos();
+        //        break;
     }
 
     private function valueFromCassandraMap(mixed $obj): array
