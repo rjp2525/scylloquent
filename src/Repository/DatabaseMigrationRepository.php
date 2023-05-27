@@ -95,7 +95,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function delete($migration): void
     {
         $this->table()
-            ->where('migration', '=', $migration->migration)
+            ->where('id', $migration->id)
             ->delete();
     }
 
