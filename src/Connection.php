@@ -6,7 +6,6 @@ use Cassandra;
 use Cassandra\BatchStatement;
 use Cassandra\Cluster;
 use Cassandra\Session;
-use DanielHe4rt\Scylloquent\Exceptions\CassandraNotSupportedException;
 use DanielHe4rt\Scylloquent\Query\Builder;
 use Illuminate\Database\Connection as BaseConnection;
 
@@ -294,7 +293,7 @@ class Connection extends BaseConnection
         array  $bindings = [],
         array  $customOptions = [],
         array  $defaultFailed = [],
-        mixed $defaultSuccess = null
+        mixed  $defaultSuccess = null
     )
     {
         return $this->run($query, $bindings, function ($query, $bindings) use ($customOptions, $defaultFailed, $defaultSuccess) {
@@ -302,7 +301,7 @@ class Connection extends BaseConnection
                 return $defaultFailed;
             }
 
-            $preparedStatement = $this->session->prepare($query);
+            $preparedStatement = $this->session->prepare($query, []);
 
             //Add bindings
             $customOptions['arguments'] = $bindings;
@@ -318,7 +317,7 @@ class Connection extends BaseConnection
      */
     public function transaction(\Closure $callback, $attempts = 1)
     {
-        throw new CassandraNotSupportedException("Transactions is not supported by Cassandra database");
+        throw ScylloquentException::transactionsNotSupported();
     }
 
     /**
@@ -326,7 +325,7 @@ class Connection extends BaseConnection
      */
     public function beginTransaction()
     {
-        throw new CassandraNotSupportedException("Transactions is not supported by Cassandra database");
+        throw ScylloquentException::transactionsNotSupported();
     }
 
     /**
@@ -334,7 +333,7 @@ class Connection extends BaseConnection
      */
     public function commit()
     {
-        throw new CassandraNotSupportedException("Transactions is not supported by Cassandra database");
+        throw ScylloquentException::transactionsNotSupported();
     }
 
     /**
@@ -342,7 +341,7 @@ class Connection extends BaseConnection
      */
     public function rollBack($toLevel = null)
     {
-        throw new CassandraNotSupportedException("Transactions is not supported by Cassandra database");
+        throw ScylloquentException::transactionsNotSupported();
     }
 
     /**
@@ -350,7 +349,7 @@ class Connection extends BaseConnection
      */
     public function transactionLevel()
     {
-        throw new CassandraNotSupportedException("Transactions is not supported by Cassandra database");
+        throw ScylloquentException::transactionsNotSupported();
     }
 
     //TODO: override isDoctrineAvailable method
