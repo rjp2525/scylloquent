@@ -108,8 +108,8 @@ abstract class Model extends BaseModel
     {
         // Convert UTCDateTime instances.
         return match (get_class($value)) {
-            '\Cassandra\Timestamp' => Carbon::createFromTimestamp($value->time()),
-            '\Cassandra\Date' => Carbon::createFromTimestamp($value->seconds()),
+            'Cassandra\Timestamp' => Carbon::createFromTimestamp($value->time()),
+            'Cassandra\Date' => Carbon::createFromTimestamp($value->seconds()),
             default => parent::asDateTime($value)
         };
     }
