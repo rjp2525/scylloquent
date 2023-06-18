@@ -22,7 +22,6 @@ class ScylloquentServiceProvider extends ServiceProvider
             });
         });
 
-        $this->app->bind('command.scylla:migrate', MigrateScyllaCommand::class);
     }
 
     /**
