@@ -56,6 +56,9 @@ class CassandraConnector extends Connector
 
         $this->builder->withPort($this->getPort($config));
 
+        $this->builder = $this->builder->withPersistentSessions(true)
+            ->withTokenAwareRouting(true);
+
         $this->setSslOptions($config);
     }
 

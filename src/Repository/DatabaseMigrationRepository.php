@@ -61,10 +61,9 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
             // The migrations table is responsible for keeping track of which of the
             // migrations have actually run for the application. We'll create the
             // table to hold the migration file's path as well as the batch ID.
-            $table->uuid('id');
-            $table->integer('batch_id');
             $table->string('migration');
-            $table->primary(['id', 'batch_id', 'migration']);
+            $table->integer('batch_id');
+            $table->primary(['migration', 'batch_id']);
         });
     }
 
@@ -78,7 +77,6 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function log($file, $batch): void
     {
         $record = [
-            'id' => new Uuid(),
             'migration' => $file,
             'batch_id' => $batch
         ];
@@ -95,7 +93,7 @@ class DatabaseMigrationRepository extends BaseDatabaseMigrationRepository
     public function delete($migration): void
     {
         $this->table()
-            ->where('id', $migration->id)
+            ->where('migration', $migration->migration)
             ->delete();
     }
 

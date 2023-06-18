@@ -71,6 +71,7 @@ class Blueprint extends BaseBlueprint
         if (empty($this->withOptions)) {
             return '';
         }
+        dump($this->withOptions);
 
         return $this->withOptions->compile();
     }

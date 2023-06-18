@@ -1,6 +1,6 @@
 DROP KEYSPACE IF EXISTS unittest;
 
-CREATE KEYSPACE unittest WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+CREATE KEYSPACE scylloquent WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};
 
 USE unittest;
 
