@@ -5,7 +5,7 @@ namespace DanielHe4rt\Scylloquent;
 use Cassandra\Value;
 use DanielHe4rt\Scylloquent\Exceptions\ScylloquentException;
 
-trait CassandraTypesTrait
+trait ScyllaTypesTrait
 {
     /**
      * Check if object is instance of any cassandra object types

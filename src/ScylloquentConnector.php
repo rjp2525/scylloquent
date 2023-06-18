@@ -5,7 +5,7 @@ namespace DanielHe4rt\Scylloquent;
 use Cassandra;
 use Illuminate\Database\Connectors\Connector;
 
-class CassandraConnector extends Connector
+class ScylloquentConnector extends Connector
 {
     const DEFAULT_PAGE_SIZE = 5000;
 

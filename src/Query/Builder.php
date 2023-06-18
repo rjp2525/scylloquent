@@ -5,14 +5,14 @@ namespace DanielHe4rt\Scylloquent\Query;
 use Cassandra\Rows;
 use DanielHe4rt\Scylloquent\Collection;
 use DanielHe4rt\Scylloquent\Connection;
-use DanielHe4rt\Scylloquent\CassandraTypesTrait;
+use DanielHe4rt\Scylloquent\ScyllaTypesTrait;
 use Illuminate\Contracts\Database\Query\Expression as ExpressionContract;
 use Illuminate\Database\Query\Builder as BaseBuilder;
 use Illuminate\Support\Arr;
 
 class Builder extends BaseBuilder
 {
-    use CassandraTypesTrait;
+    use ScyllaTypesTrait;
 
     /**
      * Use cassandra filtering

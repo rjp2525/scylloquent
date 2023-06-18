@@ -2,7 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent\Eloquent;
 
-use DanielHe4rt\Scylloquent\CassandraTypesTrait;
+use DanielHe4rt\Scylloquent\ScyllaTypesTrait;
 use DanielHe4rt\Scylloquent\Collection;
 use DanielHe4rt\Scylloquent\Eloquent\Builder as EloquentCassandraEloquentBuilder;
 use Carbon\Carbon;
@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
 
 abstract class Model extends BaseModel
 {
-    use CassandraTypesTrait;
+    use ScyllaTypesTrait;
 
     /**
      * The connection name for the model.

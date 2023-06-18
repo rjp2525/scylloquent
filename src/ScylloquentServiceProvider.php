@@ -5,7 +5,7 @@ namespace DanielHe4rt\Scylloquent;
 use DanielHe4rt\Scylloquent\Repository\DatabaseMigrationRepository;
 use Illuminate\Support\ServiceProvider;
 
-class CassandraServiceProvider extends ServiceProvider
+class ScylloquentServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -17,7 +17,7 @@ class CassandraServiceProvider extends ServiceProvider
             $db->extend('cassandra', function ($config, $name) {
                 $config['name'] = $name;
 
-                return new Connection((new CassandraConnector)->connect($config), $config);
+                return new Connection((new ScylloquentConnector)->connect($config), $config);
             });
         });
 
@@ -30,7 +30,7 @@ class CassandraServiceProvider extends ServiceProvider
     {
         $this->app->extend('migration.repository', function ($repository, $app) {
             $table = $app['config']['database.migrations'];
-
+            // Only in Scylla Related migrations -> rebuild commands
             return new DatabaseMigrationRepository($app['db'], $table);
         });
     }

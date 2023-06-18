@@ -17,7 +17,7 @@ composer require danielhe4rt/scylloquent
 And add the service provider in `config/app.php`:
 
 ```php
-DanielHe4rt\Scylloquent\CassandraServiceProvider::class,
+DanielHe4rt\Scylloquent\ScylloquentServiceProvider::class,
 ```
 
 The service provider will register a cassandra database extension with the original database manager. There is no need to register additional facades or objects. When using cassandra connections, Laravel will automatically provide you with the corresponding cassandra objects.
@@ -39,7 +39,7 @@ Add next lines to your `bootstrap.php`
 ```
 
 ```php
-    $app->register(DanielHe4rt\Scylloquent\CassandraServiceProvider::class);
+    $app->register(DanielHe4rt\Scylloquent\ScylloquentServiceProvider::class);
 ```
 
 Configuration

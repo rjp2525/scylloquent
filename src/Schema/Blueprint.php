@@ -4,6 +4,7 @@ namespace DanielHe4rt\Scylloquent\Schema;
 
 use Closure;
 use DanielHe4rt\Scylloquent\Exceptions\ScylloquentRuntimeException;
+use DanielHe4rt\Scylloquent\Exceptions\ScylloquentSchemaException;
 use Illuminate\Database\Schema\Blueprint as BaseBlueprint;
 use Illuminate\Support\Fluent;
 
@@ -51,7 +52,7 @@ class Blueprint extends BaseBlueprint
     public function compilePrimary(): string
     {
         if (empty($this->primaryKeys)) {
-            throw ScylloquentRuntimeException::missingPartitionKey();
+            throw ScylloquentSchemaException::missingPartitionKey($this->table);
         }
 
         $cql = sprintf(
@@ -71,7 +72,6 @@ class Blueprint extends BaseBlueprint
         if (empty($this->withOptions)) {
             return '';
         }
-        dump($this->withOptions);
 
         return $this->withOptions->compile();
     }
