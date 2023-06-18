@@ -2,6 +2,7 @@
 
 namespace DanielHe4rt\Scylloquent;
 
+use DanielHe4rt\Scylloquent\Console\Migrations\MigrateScyllaCommand;
 use DanielHe4rt\Scylloquent\Repository\DatabaseMigrationRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,7 @@ class ScylloquentServiceProvider extends ServiceProvider
             });
         });
 
+        $this->app->bind('command.scylla:migrate', MigrateScyllaCommand::class);
     }
 
     /**
@@ -28,10 +30,12 @@ class ScylloquentServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->extend('migration.repository', function ($repository, $app) {
-            $table = $app['config']['database.migrations'];
-            // Only in Scylla Related migrations -> rebuild commands
-            return new DatabaseMigrationRepository($app['db'], $table);
-        });
+        if ($this->app['config']['database.default'] == 'scylla') {
+            $this->app->extend('migration.repository', function ($repository, $app) {
+                $table = $app['config']['database.migrations'];
+                // Only in Scylla Related migrations -> rebuild commands
+                return new DatabaseMigrationRepository($app['db'], $table);
+            });
+        }
     }
 }
