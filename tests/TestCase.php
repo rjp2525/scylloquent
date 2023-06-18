@@ -32,21 +32,21 @@ class TestCase extends \Orchestra\Testbench\TestCase
 
         $app['config']->set('app.key', 'gi0BMtzVEdluo98rjx9aiFWjYtETsj8V');
 
-        $app['config']->set('database.default', 'cassandra');
-        $app['config']->set('database.connections.cassandra', $config['connections']['cassandra']);
+        $app['config']->set('database.default', 'scylla');
+        $app['config']->set('database.connections.scylla', $config['connections']['scylla']);
     }
 
     protected function defineDatabaseMigrations()
     {
         artisan($this, 'migrate', [
-            '--database' => 'cassandra',
+            '--database' => 'scylla',
             '--realpath' => __DIR__ . '/database',
             '--path' => [__DIR__ . '/database']
         ]);
 
         $this->beforeApplicationDestroyed(
             fn () => artisan($this, 'migrate:reset', [
-                '--database' => 'cassandra',
+                '--database' => 'scylla',
                 '--realpath' => __DIR__ . '/database',
                 '--path' => [__DIR__ . '/database']
             ])

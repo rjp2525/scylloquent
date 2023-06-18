@@ -16,6 +16,6 @@ class ScylloquentException extends \Exception
 
     public static function transactionsNotSupported(): self
     {
-        return new self("Transactions is not supported by Cassandra database");
+        return new self("Transactions is not supported by Scylla database");
     }
 }

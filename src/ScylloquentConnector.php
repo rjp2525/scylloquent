@@ -69,7 +69,7 @@ class ScylloquentConnector extends Connector
      *
      * @return array
      */
-    protected function getContactPoints(array $config)
+    protected function getContactPoints(array $config): array
     {
         $contactPoints = [];
 
@@ -91,7 +91,7 @@ class ScylloquentConnector extends Connector
      *
      * @return int
      */
-    protected function getPort(array $config)
+    protected function getPort(array $config): int
     {
         return !empty($config['port']) ? (int)$config['port'] : 9042;
     }

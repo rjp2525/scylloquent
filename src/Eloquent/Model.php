@@ -64,7 +64,7 @@ abstract class Model extends BaseModel
     {
         $connection = $this->getConnection();
 
-        if ($connection->getDriverName() == 'cassandra') {
+        if ($connection->getDriverName() == 'scylla') {
             return new EloquentCassandraEloquentBuilder($query);
         }
 

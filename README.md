@@ -25,7 +25,7 @@ The service provider will register a cassandra database extension with the origi
 For usage outside Laravel, check out the [Capsule manager](https://github.com/illuminate/database/blob/master/README.md) and add:
 
 ```php
-$capsule->getDatabaseManager()->extend('cassandra', function($config)
+$capsule->getDatabaseManager()->extend('scylla', function($config)
 {
     return new DanielHe4rt\Scylloquent\Connection($config);
 });
@@ -45,16 +45,16 @@ Add next lines to your `bootstrap.php`
 Configuration
 -------------
 
-Change your default database connection name in `config/database.php`:
+Change your default database connection name in `config/database.php` if you want:
 
 ```php
-'default' => env('DB_CONNECTION', 'cassandra'),
+'default' => env('DB_CONNECTION', 'scylla'),
 ```
 
 And add a new cassandra connection:
 
 ```php
-'cassandra' => [
+'scylla' => [
     'driver'          => 'cassandra',
     'scheme'          => env('DB_SCHEME', 'tcp'),
     'host'            => env('DB_HOST', 'localhost'),
@@ -137,7 +137,7 @@ Relations - NOT SUPPORTED
 
 There is ability to use UUID as model primary key
 
-```
+```php
 class Item
 {
     ...
@@ -268,11 +268,11 @@ $users = User::from('users_by_country_view')->where('country', 'USA')->get();
 
 TODO:
 -----
-[ ] full support of composite primary key
-[ ] full test coverage
-[ ] fix diff between \Cassandra\Date with Carbon
-[ ] add schema queries support
-[ ] add ability to use async queries
+- [ ] full support of composite primary key
+- [ ] full test coverage
+- [x] fix diff between \Cassandra\Date with Carbon
+- [ ] add schema queries support
+- [ ] add ability to use async queries
 
 Docker:
 ------

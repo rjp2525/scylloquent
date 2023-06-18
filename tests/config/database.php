@@ -1,10 +1,8 @@
 <?php
 
 return [
-
     'connections' => [
-        'cassandra' => [
-            'name' => 'cassandra',
+        'scylla' => [
             'driver' => 'cassandra',
             'host' => 'localhost',
             'keyspace' => 'scylloquent',

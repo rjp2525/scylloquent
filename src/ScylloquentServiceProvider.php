@@ -14,7 +14,7 @@ class ScylloquentServiceProvider extends ServiceProvider
     {
         // Add database driver.
         $this->app->resolving('db', function ($db) {
-            $db->extend('cassandra', function ($config, $name) {
+            $db->extend('scylla', function ($config, $name) {
                 $config['name'] = $name;
 
                 return new Connection((new ScylloquentConnector)->connect($config), $config);
