@@ -8,6 +8,7 @@ use Cassandra\Cluster;
 use Cassandra\Session;
 use DanielHe4rt\Scylloquent\Exceptions\ScylloquentException;
 use DanielHe4rt\Scylloquent\Query\Builder;
+use Exception;
 use Illuminate\Database\Connection as BaseConnection;
 
 class Connection extends BaseConnection
@@ -46,7 +47,12 @@ class Connection extends BaseConnection
 
         $this->keyspace = $this->getDatabase($config);
 
-        $this->session = $this->cluster->connect($this->keyspace);
+        try {
+            $this->session = $this->cluster->connect($this->keyspace);
+        } catch (Exception) {
+            $this->session = $this->cluster->connect();
+        }
+
 
         $this->useDefaultPostProcessor();
 

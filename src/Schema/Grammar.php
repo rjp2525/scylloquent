@@ -49,6 +49,8 @@ class Grammar extends BaseGrammar
             . "AND keyspace_name = :\"keyspace_name\"";
     }
 
+
+
     /**
      * Compile a create table command.
      */
