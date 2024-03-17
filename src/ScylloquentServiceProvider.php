@@ -37,4 +37,13 @@ class ScylloquentServiceProvider extends ServiceProvider
             });
         }
     }
+
+    protected function registerCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                Commands\CreateScyllaKeyspaceCommand::class,
+            ]);
+        }
+    }
 }
