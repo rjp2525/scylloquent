@@ -29,13 +29,8 @@ class ScylloquentServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->app['config']['database.default'] == 'scylla') {
-            $this->app->extend('migration.repository', function ($repository, $app) {
-                $table = $app['config']['database.migrations'];
-                // Only in Scylla Related migrations -> rebuild commands
-                return new DatabaseMigrationRepository($app['db'], $table);
-            });
-        }
+        $this->registerCommands();
+        $this->registerDatabaseMigrationRepository();
     }
 
     protected function registerCommands(): void
@@ -44,6 +39,17 @@ class ScylloquentServiceProvider extends ServiceProvider
             $this->commands([
                 Commands\CreateScyllaKeyspaceCommand::class,
             ]);
+        }
+    }
+
+    private function registerDatabaseMigrationRepository(): void
+    {
+        if ($this->app['config']['database.default'] == 'scylla') {
+            $this->app->extend('migration.repository', function ($repository, $app) {
+                $table = $app['config']['database.migrations'];
+                // Only in Scylla Related migrations -> rebuild commands
+                return new DatabaseMigrationRepository($app['db'], $table);
+            });
         }
     }
 }
