@@ -226,7 +226,7 @@ class Builder extends BaseBuilder
      *
      * @return Collection
      */
-    public function paginate($perPage = 15, $columns = [...], $pageName = 'page', $page = null, $total = null)
+    public function paginate($perPage = 15, $columns = ['*'], $pageName = 'page', $page = null, $total = null)
     {
         $option = ['page_size' => $perPage];
 
